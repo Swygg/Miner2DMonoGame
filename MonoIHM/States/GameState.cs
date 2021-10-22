@@ -21,6 +21,8 @@ namespace Mono.States
         public Texture2D NoTextureTexture;
 
         public SpriteFont TilesFont;
+        private TextComponent GameStatee;
+        private TextComponent GameLast;
 
         //public static Content
 
@@ -45,7 +47,13 @@ namespace Mono.States
 
             TilesFont = _content.Load<SpriteFont>("Fonts/Tiles/TilesFont");
 
-            _components = new List<Component>();
+            GameStatee = new TextComponent(null, TilesFont) { Text = "Etat du jeu : ", Position = new Vector2(0, 0) };
+            GameLast = new TextComponent(null, TilesFont) { Text = "Duree : ", Position = new Vector2(0, 15) };
+            _components = new List<Component>()
+            {
+              GameStatee,
+              GameLast,
+            };
             for (int x = 0; x < _map.Width; x++)
             {
                 for (int y = 0; y < _map.Height; y++)
@@ -72,22 +80,57 @@ namespace Mono.States
 
         public override void Update(GameTime gameTime)
         {
+            GameLast.SecondaryText = _map.GetTimeSinceStart().ToString("hh':'mm':'ss");
             foreach (var component in _components)
             {
-                var tile = component as Controls.Tile;
-                tile.ChangeTile(_map.Tiles[tile.X, tile.Y]);
+                if (component is Controls.Tile tile)
+                {
+                    tile.ChangeTile(_map.Tiles[tile.X, tile.Y]);
+                }
                 component.Update(gameTime);
+            }
+            switch (_map.GameState)
+            {
+                case MinerLogic.Enums.GameStateType.None:
+                    GameStatee.SecondaryText = "Game state = none?";
+                    break;
+                case MinerLogic.Enums.GameStateType.PLaying:
+                    GameStatee.SecondaryText = "En cours de jeu";
+                    break;
+                case MinerLogic.Enums.GameStateType.Victory:
+                    GameStatee.SecondaryText = "Victoire";
+                    break;
+                case MinerLogic.Enums.GameStateType.Defeat:
+                    GameStatee.SecondaryText = "Defaite";
+                    break;
+                default:
+                    break;
             }
         }
 
         public void Discover(int x, int y)
         {
-            _map.Discover(x, y);
+            try
+            {
+                _map.Discover(x, y);
+            }
+            catch
+            {
+
+            }
         }
 
         public void Flag(int x, int y)
         {
-            _map.Flag(x, y);
+            try
+            {
+                _map.Flag(x, y);
+            }
+            catch
+            {
+
+            }
+
         }
     }
 }

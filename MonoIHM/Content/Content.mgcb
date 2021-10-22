@@ -20,6 +20,18 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/Tiles/TilesFront.spritefont;Fonts/Tiles/TilesFont.spritefont
 
+#begin Pictures/Components/button.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Pictures/Components/button.png
+
 #begin Pictures/Tiles/Base.png
 /importer:TextureImporter
 /processor:TextureProcessor

@@ -23,19 +23,33 @@ namespace Mono.States
         public SpriteFont TilesFont;
         private TextComponent GameStatee;
         private TextComponent GameLast;
+        private EDifficulty _difficulty;
 
         //public static Content
 
-        public GameState(Game game, GraphicsDevice graphicsDevice, ContentManager content)
+        public GameState(Game game, GraphicsDevice graphicsDevice, ContentManager content, EDifficulty difficulty)
             : base(game, graphicsDevice, content)
         {
-
+            _difficulty = difficulty;
         }
 
         public override void Initialize()
         {
             _game.IsMouseVisible = true;
-            _map = new Map(10, 10, 10);
+            switch (_difficulty)
+            {
+                case EDifficulty.Easy:
+                    _map = new Map(10, 10, 10);
+                    break;
+                case EDifficulty.Medium:
+                    _map = new Map(20, 20, 50);
+                    break;
+                case EDifficulty.hard:
+                    _map = new Map(30, 30, 200);
+                    break;
+                default:
+                    break;
+            }
 
             GroundRawTexture = _content.Load<Texture2D>("Pictures/Tiles/GroundRaw");
             GroundDiscoveredTexture = _content.Load<Texture2D>("Pictures/Tiles/GroundDiscovered");
@@ -131,6 +145,13 @@ namespace Mono.States
 
             }
 
+        }
+
+        public enum EDifficulty
+        {
+            Easy,
+            Medium,
+            hard
         }
     }
 }

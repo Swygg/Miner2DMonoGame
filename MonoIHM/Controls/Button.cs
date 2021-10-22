@@ -25,12 +25,24 @@ namespace Mono.Controls
         public bool Clicked { get; private set; }
         public Color PenColour { get; set; }
         public Vector2 Position { get; set; }
+        public bool Centered { get; set; }
 
         public Rectangle Rectangle
         {
             get
             {
-                return new Rectangle((int)Position.X, (int)Position.Y, (int)_font.MeasureString(Text).X+50, (int)_font.MeasureString(Text).Y + 10);
+                if(Centered)
+                return new Rectangle(
+                    (int)Position.X - (int)_font.MeasureString(Text).X / 2-25, 
+                    (int)Position.Y,
+                    (int)_font.MeasureString(Text).X +50, 
+                    (int)_font.MeasureString(Text).Y + 10);
+                else
+                    return new Rectangle(
+                    (int)Position.X,
+                    (int)Position.Y,
+                    (int)_font.MeasureString(Text).X +50,
+                    (int)_font.MeasureString(Text).Y + 10);
             }
         }
 
@@ -48,16 +60,25 @@ namespace Mono.Controls
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            var colour = Color.White;
+            var colour = MinerGame.Color;
             if (_isHovering)
                 colour = Color.Gray;
 
             spriteBatch.Draw(_texture, Rectangle, colour);
 
-            if(!string.IsNullOrEmpty(Text))
+            if (!string.IsNullOrEmpty(Text))
             {
-                var x = (Rectangle.X + (Rectangle.Width / 2)) - (_font.MeasureString(Text).X / 2);
-                var y = (Rectangle.Y + (Rectangle.Height / 2)) - (_font.MeasureString(Text).Y / 2);
+                float x;
+                float y;
+                if (Centered)
+                {
+                    x = Position.X - (_font.MeasureString(Text).X / 2);
+                }
+                else
+                {
+                    x = (Rectangle.X + (Rectangle.Width / 2)) - (_font.MeasureString(Text).X / 2);
+                }
+                y = (Rectangle.Y + (Rectangle.Height / 2)) - (_font.MeasureString(Text).Y / 2);
 
                 spriteBatch.DrawString(_font, Text, new Vector2(x, y), PenColour);
             }
@@ -71,11 +92,11 @@ namespace Mono.Controls
             var mouseRectange = new Rectangle(_currentMouse.X, _currentMouse.Y, 1, 1);
             _isHovering = false;
 
-            if(mouseRectange.Intersects(Rectangle))
+            if (mouseRectange.Intersects(Rectangle))
             {
                 _isHovering = true;
 
-                if(_currentMouse.LeftButton == ButtonState.Released && _previousMouse.LeftButton == ButtonState.Pressed)
+                if (_currentMouse.LeftButton == ButtonState.Released && _previousMouse.LeftButton == ButtonState.Pressed)
                 {
                     Click?.Invoke(this, new EventArgs());
                 }

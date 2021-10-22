@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using MinerLogic.GameContent;
 using Mono.States;
 
 namespace Mono
@@ -15,12 +14,16 @@ namespace Mono
         private State _nextState;
 
         public static Texture2D NoTextureTexture;
+        public static Color Color;
+        public static GraphicsDeviceManager Graphics;
 
         public MinerGame()
         {
             _graphics = new GraphicsDeviceManager(this);
+            Graphics = _graphics;
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+            Color = Color.CornflowerBlue;
         }
 
         protected override void Initialize()
@@ -48,12 +51,18 @@ namespace Mono
             // TODO: Add your update logic here
 
             base.Update(gameTime);
+            if (_nextState != null)
+            {
+                _currentState = _nextState;
+                _nextState = null;
+            }
             _currentState.Update(gameTime);
+            _currentState.PostUpdate(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color);
 
             // TODO: Add your drawing code here
 

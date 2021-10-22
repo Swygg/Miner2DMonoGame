@@ -13,12 +13,31 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin Fonts/Buttons/ButtonFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/Buttons/ButtonFont.spritefont
+
 #begin Fonts/Tiles/TilesFront.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:Fonts/Tiles/TilesFront.spritefont;Fonts/Tiles/TilesFont.spritefont
+
+#begin Pictures/Components/button (2).png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Pictures/Components/button (2).png;Pictures/Components/button2.png
 
 #begin Pictures/Components/button.png
 /importer:TextureImporter
@@ -31,6 +50,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Pictures/Components/button.png
+
+#begin Pictures/Components/buttonQuit.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Pictures/Components/buttonQuit.png
 
 #begin Pictures/Tiles/Base.png
 /importer:TextureImporter
@@ -92,6 +123,18 @@
 /processorParam:TextureFormat=Color
 /build:Pictures/Tiles/MineDiscovered.png
 
+#begin Pictures/Tiles/MineFalseFlagged.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Pictures/Tiles/MineFalseFlagged.png
+
 #begin Pictures/Tiles/MineFlagged.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -103,6 +146,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Pictures/Tiles/MineFlagged.png
+
+#begin Pictures/Tiles/MineHidden.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Pictures/Tiles/MineHidden.png
 
 #begin Pictures/Tiles/MineRaw.png
 /importer:TextureImporter

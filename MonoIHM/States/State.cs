@@ -17,8 +17,6 @@ namespace Mono.States
             _game = game;
             _graphicsDevice = graphicsDevice;
             _content = content;
-
-            Initialize();
         }
 
         public abstract void Initialize();

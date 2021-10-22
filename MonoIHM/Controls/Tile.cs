@@ -40,13 +40,13 @@ namespace Mono.Controls
 
 
 
-        public Tile(GameState gameState, ml.Tile tile, int x, int y)
+        public Tile(GameState gameState, ml.Tile tile, int x, int y) 
         {
             _gameState = gameState;
             ChangeTile(tile);
             X = x;
             Y = y;
-            Position = new Vector2(StartX +x * Width + (x - 1) * Space, StartY +y * Height + (y - 1) * Space);
+            Position = new Vector2(StartX + x * Width + (x - 1) * Space, StartY + y * Height + (y - 1) * Space);
         }
 
         public void ChangeTile(ml.Tile tile)
@@ -96,10 +96,16 @@ namespace Mono.Controls
                     _texture = _gameState.GroundDiscoveredTexture;
                     break;
                 case MinerLogic.Enums.TileType.GroundFlagged:
-                    _texture = _gameState.GroundFlaggedTexture;
+                    if (_gameState.GetGameState() == MinerLogic.Enums.GameStateType.PLaying)
+                        _texture = _gameState.GroundFlaggedTexture;
+                    else
+                        _texture = _gameState.MineFalseFlaggedTexture;
                     break;
                 case MinerLogic.Enums.TileType.MineRaw:
-                    _texture = _gameState.MineRawTexture;
+                    if (_gameState.GetGameState() == MinerLogic.Enums.GameStateType.PLaying)
+                        _texture = _gameState.MineRawTexture;
+                    else
+                        _texture = _gameState.MineUnfoundTexture;
                     break;
                 case MinerLogic.Enums.TileType.MineDiscovered:
                     _texture = _gameState.MineDiscoveredTexture;
@@ -119,11 +125,11 @@ namespace Mono.Controls
             spriteBatch.Draw(_texture, Rectangle, Color.White);
             if (_tileMinerLogic.NumberMines != -1 && _tileMinerLogic.NumberMines != 0)
             {
-                var vector = new Vector2(Position.X + _texture.Width / 2 -  _gameState.TilesFont.MeasureString(_tileMinerLogic.NumberMines.ToString()).X ,
-                                         Position.Y + _texture.Height / 2 - _gameState.TilesFont.MeasureString(_tileMinerLogic.NumberMines.ToString()).Y );
+                var vector = new Vector2(Position.X + _texture.Width / 2 - _gameState.TilesFont.MeasureString(_tileMinerLogic.NumberMines.ToString()).X,
+                                         Position.Y + _texture.Height / 2 - _gameState.TilesFont.MeasureString(_tileMinerLogic.NumberMines.ToString()).Y);
 
-               //var vector = new Vector2(Position.X + _texture.Width / 2,
-               //                        Position.Y + _texture.Height / 2 );
+                //var vector = new Vector2(Position.X + _texture.Width / 2,
+                //                        Position.Y + _texture.Height / 2 );
                 spriteBatch.DrawString(_gameState.TilesFont, _tileMinerLogic.NumberMines.ToString(), vector, Color.Black);
             }
         }

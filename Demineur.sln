@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31729.503
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MinerLogic", "MinerLogic\MinerLogic.csproj", "{37520A34-0932-4873-947C-EC265C8B44C8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTest", "ConsoleTest\ConsoleTest.csproj", "{B7848A22-AB17-4496-A69D-1BA7166EE733}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mono", "MonoIHM\Mono.csproj", "{77FCB896-DCD7-4C58-A000-ACC7A0548585}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{37520A34-0932-4873-947C-EC265C8B44C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37520A34-0932-4873-947C-EC265C8B44C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37520A34-0932-4873-947C-EC265C8B44C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37520A34-0932-4873-947C-EC265C8B44C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7848A22-AB17-4496-A69D-1BA7166EE733}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7848A22-AB17-4496-A69D-1BA7166EE733}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7848A22-AB17-4496-A69D-1BA7166EE733}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7848A22-AB17-4496-A69D-1BA7166EE733}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77FCB896-DCD7-4C58-A000-ACC7A0548585}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77FCB896-DCD7-4C58-A000-ACC7A0548585}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77FCB896-DCD7-4C58-A000-ACC7A0548585}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77FCB896-DCD7-4C58-A000-ACC7A0548585}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AD38E1B7-4B57-4C0A-8CA5-C73235214423}
+	EndGlobalSection
+EndGlobal

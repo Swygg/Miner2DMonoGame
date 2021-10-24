@@ -80,7 +80,7 @@ namespace Mono.Controls
                 }
                 y = (Rectangle.Y + (Rectangle.Height / 2)) - (_font.MeasureString(Text).Y / 2);
 
-                spriteBatch.DrawString(_font, Text, new Vector2(x, y), PenColour);
+                spriteBatch.DrawString(_font, Text, new Vector2(x, y), Color.Red);
             }
         }
 

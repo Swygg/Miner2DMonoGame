@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using Mono.Controls;
 using MinerLogic.GameContent;
 using MinerLogic.Enums;
+using MinerLogic.Models;
+using System;
 
 namespace Mono.States
 {
@@ -22,13 +24,33 @@ namespace Mono.States
         public Texture2D NoTextureTexture;
         public Texture2D MineFalseFlaggedTexture;
         public Texture2D MineUnfoundTexture;
+        public Texture2D DefeatComponentTexture;
+        public Texture2D VictoryComponentTexture;
+        public Texture2D TimeComponentTexture;
 
         public SpriteFont TilesFont;
-        private TextComponent GameStatee;
-        private TextComponent GameLast;
+
+        private TextComponent _gameStatee;
+        private TextComponent _gameLast;
         private EDifficulty _difficulty;
 
-        //public static Content
+        private static MapElements _mapElements_easy;
+        private static MapElements _mapElements_medium;
+        private static MapElements _mapElements_hard;
+
+        private MapElements _mapElements_actual;
+
+        private int _tileWidth;
+        private int _tileHeight;
+        private int _tileSpace;
+
+
+        static GameState()
+        {
+            _mapElements_easy = new MapElements(10, 10, 10);
+            _mapElements_medium = new MapElements(15, 15, 30);
+            _mapElements_hard = new MapElements(20, 20, 100);
+        }
 
         public GameState(Game game, GraphicsDevice graphicsDevice, ContentManager content, EDifficulty difficulty)
             : base(game, graphicsDevice, content)
@@ -44,17 +66,19 @@ namespace Mono.States
             switch (_difficulty)
             {
                 case EDifficulty.Easy:
-                    _map = new Map(10, 10, 10);
+                    _mapElements_actual = _mapElements_easy;
                     break;
                 case EDifficulty.Medium:
-                    _map = new Map(18, 14, 50);
+                    _mapElements_actual = _mapElements_medium;
                     break;
                 case EDifficulty.hard:
-                    _map = new Map(25, 25, 100);
+                    _mapElements_actual = _mapElements_hard;
                     break;
                 default:
-                    break;
+                    throw new Exception("No mode is selected");
             }
+            _map = new Map(_mapElements_actual);
+            InitializeTileSize();
 
             GroundRawTexture = _content.Load<Texture2D>("Pictures/Tiles/GroundRaw");
             GroundDiscoveredTexture = _content.Load<Texture2D>("Pictures/Tiles/GroundDiscovered");
@@ -66,10 +90,14 @@ namespace Mono.States
             MineUnfoundTexture = _content.Load<Texture2D>("Pictures/Tiles/MineHidden");
             NoTextureTexture = _content.Load<Texture2D>("Pictures/Tiles/NoTexture");
 
+            TimeComponentTexture = _content.Load<Texture2D>("Pictures/Components/time");
+            VictoryComponentTexture = _content.Load<Texture2D>("Pictures/Components/victory");
+            DefeatComponentTexture = _content.Load<Texture2D>("Pictures/Components/defeat");
+
             TilesFont = _content.Load<SpriteFont>("Fonts/Tiles/TilesFont");
 
-            GameStatee = new TextComponent(null, TilesFont) { Text = "Etat du jeu : ", Position = new Vector2(0, 0) };
-            GameLast = new TextComponent(null, TilesFont) { Text = "Duree : ", Position = new Vector2(0, 15) };
+            _gameStatee = new TextComponent(null, TilesFont) { Text = "Etat du jeu : ", Position = new Vector2(0, 0) };
+            _gameLast = new TextComponent(null, TilesFont) { Text = "Duree : ", Position = new Vector2(0, 15) };
 
             var _buttonTexture = _content.Load<Texture2D>("Pictures/Components/Button");
             var buttonFont = _content.Load<SpriteFont>("Fonts/Buttons/ButtonFont");
@@ -81,11 +109,14 @@ namespace Mono.States
             };
             menuButton.Click += MenuButton_Click;
 
+            var pictureExplicative = new PictureComponent(this, null) { Position = new Vector2(500, 150) };
+
             _components = new List<Component>()
             {
-              GameStatee,
-              GameLast,
+              _gameStatee,
+              _gameLast,
               menuButton,
+              pictureExplicative,
             };
             for (int x = 0; x < _map.Width; x++)
             {
@@ -96,7 +127,7 @@ namespace Mono.States
             }
         }
 
-        private void MenuButton_Click(object sender, System.EventArgs e)
+        private void MenuButton_Click(object sender, EventArgs e)
         {
             (_game as MinerGame).ChangeState(new MenuState(_game, _graphicsDevice, _content));
         }
@@ -118,7 +149,7 @@ namespace Mono.States
 
         public override void Update(GameTime gameTime)
         {
-            GameLast.SecondaryText = _map.GetTimeSinceStart().ToString("hh':'mm':'ss");
+            _gameLast.SecondaryText = _map.GetTimeSinceStart().ToString("hh':'mm':'ss");
             foreach (var component in _components)
             {
                 if (component is Controls.Tile tile)
@@ -130,16 +161,16 @@ namespace Mono.States
             switch (_map.GameState)
             {
                 case MinerLogic.Enums.GameStateType.None:
-                    GameStatee.SecondaryText = "Game state = none?";
+                    _gameStatee.SecondaryText = "Game state = none?";
                     break;
                 case MinerLogic.Enums.GameStateType.PLaying:
-                    GameStatee.SecondaryText = "En cours de jeu";
+                    _gameStatee.SecondaryText = "En cours de jeu";
                     break;
                 case MinerLogic.Enums.GameStateType.Victory:
-                    GameStatee.SecondaryText = "Victoire";
+                    _gameStatee.SecondaryText = "Victoire";
                     break;
                 case MinerLogic.Enums.GameStateType.Defeat:
-                    GameStatee.SecondaryText = "Defaite";
+                    _gameStatee.SecondaryText = "Defaite";
                     break;
                 default:
                     break;
@@ -181,6 +212,56 @@ namespace Mono.States
             Easy,
             Medium,
             hard
+        }
+
+        private void InitializeTileSize()
+        {
+            var spaceUp = 40;
+            var spaceDown = 40;
+            var maxSize = 32;
+            var maxSpace = 2;
+
+            var screenHeight = MinerGame.Graphics.PreferredBackBufferHeight;
+
+            int tileWidth = maxSize;
+            int tileHeight = maxSize;
+
+            var sizeIsOk = false;
+            while (!sizeIsOk)
+            {
+                if (spaceUp +
+                    spaceDown +
+                    _mapElements_actual.NbLines * maxSize +
+                    (_mapElements_actual.NbLines - 1) * maxSpace
+                    <=
+                       screenHeight)
+                {
+                    tileWidth = maxSize;
+                    tileHeight = maxSize;
+                    _tileSpace = maxSpace;
+                    sizeIsOk = true;
+                }
+                else
+                {
+                    maxSize -= 2;
+                }
+            }
+
+            _tileWidth = tileWidth;
+            _tileHeight = tileHeight;
+        }
+
+        public int GetTileWidth()
+        {
+            return _tileWidth;
+        }
+        public int GetTileHeight()
+        {
+            return _tileHeight;
+        }
+        public int GetTileSpace()
+        {
+            return _tileSpace;
         }
     }
 }

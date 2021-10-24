@@ -1,5 +1,6 @@
 ﻿using MinerLogic.Enums;
 using MinerLogic.Exceptions;
+using MinerLogic.Models;
 using System;
 
 
@@ -30,18 +31,24 @@ namespace MinerLogic.GameContent
         #endregion
 
         #region public Const
-        public const int MINIMUM_HEIGHT = 10;
-        public const int MINIMUM_WIDTH = 10;
+        public const int MINIMUM_HEIGHT = 1;
+        public const int MINIMUM_WIDTH = 1;
         public const int MINIMUM_MINES = 10;
         public const int MAXIMUM_HEIGHT = 200;
         public const int MAXIMUM_WIDTH = 200;
-        public const int MAXIMUM_MINES_PERCENT = 30;
+        public const int MAXIMUM_MINES_PERCENT =99;
         #endregion
 
 
 
         #region Constructor
-        public Map(int nbLines, int nbColumns, int nbMines)
+
+        public Map(MapElements mapElements) : this(mapElements.NbLines,mapElements.NbRows, mapElements.NbMines)
+        {
+           
+        }
+
+        private Map(int nbLines, int nbColumns, int nbMines)
         {
             if (nbLines <= 0 ||
                 nbColumns <= 0 ||

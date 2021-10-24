@@ -13,8 +13,6 @@ namespace Mono.Controls
 
         private MouseState _currentMouse;
         private MouseState _previousMouse;
-        private SpriteFont _font;
-        private bool _isHovering;
         private Texture2D _texture;
         private ml.Tile _tileMinerLogic { get; set; }
         private bool _tileHasChanged { get; set; }
@@ -31,9 +29,9 @@ namespace Mono.Controls
         public Vector2 Position { get; set; }
         public int X { get; private set; }
         public int Y { get; private set; }
-        public int Width { get; set; } = 30;
+        /*public int Width { get; set; } = 30;
         public int Height { get; set; } = 30;
-        public int Space { get; set; } = 5;
+        public int Space { get; set; } = 5;*/
 
         public int StartX { get; set; } = 50;
         public int StartY { get; set; } = 50;
@@ -46,6 +44,11 @@ namespace Mono.Controls
             ChangeTile(tile);
             X = x;
             Y = y;
+
+            var Width = _gameState.GetTileWidth();
+            var Height = _gameState.GetTileHeight();
+            var Space = _gameState.GetTileSpace();
+
             Position = new Vector2(StartX + x * Width + (x - 1) * Space, StartY + y * Height + (y - 1) * Space);
         }
 
@@ -59,7 +62,7 @@ namespace Mono.Controls
         {
             get
             {
-                return new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
+                return new Rectangle((int)Position.X, (int)Position.Y, _gameState.GetTileWidth(), _gameState.GetTileHeight());
             }
         }
 
@@ -125,11 +128,9 @@ namespace Mono.Controls
             spriteBatch.Draw(_texture, Rectangle, Color.White);
             if (_tileMinerLogic.NumberMines != -1 && _tileMinerLogic.NumberMines != 0)
             {
-                var vector = new Vector2(Position.X + _texture.Width / 2 - _gameState.TilesFont.MeasureString(_tileMinerLogic.NumberMines.ToString()).X,
-                                         Position.Y + _texture.Height / 2 - _gameState.TilesFont.MeasureString(_tileMinerLogic.NumberMines.ToString()).Y);
+                var vector = new Vector2((Position.X + _gameState.GetTileWidth() / 2) - _gameState.TilesFont.MeasureString(_tileMinerLogic.NumberMines.ToString()).X/2,
+                                         (Position.Y + _gameState.GetTileHeight() / 2 )- _gameState.TilesFont.MeasureString(_tileMinerLogic.NumberMines.ToString()).Y/2);
 
-                //var vector = new Vector2(Position.X + _texture.Width / 2,
-                //                        Position.Y + _texture.Height / 2 );
                 spriteBatch.DrawString(_gameState.TilesFont, _tileMinerLogic.NumberMines.ToString(), vector, Color.Black);
             }
         }

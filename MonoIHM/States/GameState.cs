@@ -27,8 +27,12 @@ namespace Mono.States
         public Texture2D DefeatComponentTexture;
         public Texture2D VictoryComponentTexture;
         public Texture2D TimeComponentTexture;
-
+        
         public SpriteFont TilesFont;
+
+        public Color BorderColor = Color.Black;
+        private Rectangle BorderRectangle;
+        private Texture2D BorderTexture;
 
         private TextComponent _gameStatee;
         private TextComponent _gameLast;
@@ -44,6 +48,18 @@ namespace Mono.States
         private int _tileHeight;
         private int _tileSpace;
 
+        public int Space_Left = 40;
+        public int Space_Header = 40;
+        public int Space_Footer = 40;
+        public int Space_Border = 5;
+        public int PixelSize = 32;
+
+        public enum EDifficulty
+        {
+            Easy,
+            Medium,
+            hard
+        }
 
         static GameState()
         {
@@ -125,6 +141,11 @@ namespace Mono.States
                     _components.Add(new Controls.Tile(this, _map.Tiles[x, y], x, y));
                 }
             }
+
+            BorderTexture = new Texture2D(_graphicsDevice, BorderRectangle.Width, BorderRectangle.Height);
+            Color[] data = new Color[BorderRectangle.Width * BorderRectangle.Height];
+            for (int i = 0; i < data.Length; ++i) data[i] = BorderColor;
+            BorderTexture.SetData(data);
         }
 
         private void MenuButton_Click(object sender, EventArgs e)
@@ -135,6 +156,7 @@ namespace Mono.States
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
+            spriteBatch.Draw(BorderTexture, BorderRectangle, BorderColor);
             foreach (var component in _components)
             {
                 component.Draw(gameTime, spriteBatch);
@@ -207,50 +229,6 @@ namespace Mono.States
             return _map.GameState;
         }
 
-        public enum EDifficulty
-        {
-            Easy,
-            Medium,
-            hard
-        }
-
-        private void InitializeTileSize()
-        {
-            var spaceUp = 40;
-            var spaceDown = 40;
-            var maxSize = 32;
-            var maxSpace = 2;
-
-            var screenHeight = MinerGame.Graphics.PreferredBackBufferHeight;
-
-            int tileWidth = maxSize;
-            int tileHeight = maxSize;
-
-            var sizeIsOk = false;
-            while (!sizeIsOk)
-            {
-                if (spaceUp +
-                    spaceDown +
-                    _mapElements_actual.NbLines * maxSize +
-                    (_mapElements_actual.NbLines - 1) * maxSpace
-                    <=
-                       screenHeight)
-                {
-                    tileWidth = maxSize;
-                    tileHeight = maxSize;
-                    _tileSpace = maxSpace;
-                    sizeIsOk = true;
-                }
-                else
-                {
-                    maxSize -= 2;
-                }
-            }
-
-            _tileWidth = tileWidth;
-            _tileHeight = tileHeight;
-        }
-
         public int GetTileWidth()
         {
             return _tileWidth;
@@ -262,6 +240,47 @@ namespace Mono.States
         public int GetTileSpace()
         {
             return _tileSpace;
+        }
+
+
+
+        private void InitializeTileSize()
+        {
+            var screenHeight = MinerGame.Graphics.PreferredBackBufferHeight;
+
+            int tileWidth = PixelSize;
+            int tileHeight = PixelSize;
+
+            var sizeIsOk = false;
+            while (!sizeIsOk)
+            {
+                if (Space_Header +
+                    Space_Footer +
+                    _mapElements_actual.NbLines * PixelSize +
+                    (_mapElements_actual.NbLines - 1) * Space_Border
+                    <=
+                       screenHeight)
+                {
+                    tileWidth = PixelSize;
+                    tileHeight = PixelSize;
+                    _tileSpace = Space_Border;
+                    sizeIsOk = true;
+                }
+                else
+                {
+                    PixelSize -= 2;
+                }
+            }
+
+            _tileWidth = tileWidth;
+            _tileHeight = tileHeight;
+
+            BorderRectangle = new Rectangle(
+                Space_Left,
+                Space_Header,
+               _mapElements_actual.NbLines * PixelSize + (_mapElements_actual.NbLines - 1) * Space_Border,
+               _mapElements_actual.NbRows * PixelSize + (_mapElements_actual.NbRows - 1) * Space_Border
+               );
         }
     }
 }

@@ -46,12 +46,11 @@ namespace Mono.States
 
         private int _tileWidth;
         private int _tileHeight;
-        private int _tileSpace;
 
         public int Space_Left = 40;
         public int Space_Header = 40;
         public int Space_Footer = 40;
-        public int Space_Border = 5;
+        public int Space_Border = 0;
         public int PixelSize = 32;
 
         public enum EDifficulty
@@ -105,6 +104,10 @@ namespace Mono.States
             MineFalseFlaggedTexture = _content.Load<Texture2D>("Pictures/Tiles/MineFalseFlagged");
             MineUnfoundTexture = _content.Load<Texture2D>("Pictures/Tiles/MineHidden");
             NoTextureTexture = _content.Load<Texture2D>("Pictures/Tiles/NoTexture");
+            
+            var restartButtonTexture = _content.Load<Texture2D>("Pictures/Components/Restart");
+
+
 
             TimeComponentTexture = _content.Load<Texture2D>("Pictures/Components/time");
             VictoryComponentTexture = _content.Load<Texture2D>("Pictures/Components/victory");
@@ -125,6 +128,13 @@ namespace Mono.States
             };
             menuButton.Click += MenuButton_Click;
 
+            var startNewButton = new Button(restartButtonTexture, buttonFont)
+            {
+                Position = new Vector2(400, 0),
+                Text="",
+            };
+            startNewButton.Click += StartNewButton_Click;
+
             var pictureExplicative = new PictureComponent(this, null) { Position = new Vector2(500, 150) };
 
             _components = new List<Component>()
@@ -132,6 +142,7 @@ namespace Mono.States
               _gameStatee,
               _gameLast,
               menuButton,
+              startNewButton,
               pictureExplicative,
             };
             for (int x = 0; x < _map.Width; x++)
@@ -146,6 +157,11 @@ namespace Mono.States
             Color[] data = new Color[BorderRectangle.Width * BorderRectangle.Height];
             for (int i = 0; i < data.Length; ++i) data[i] = BorderColor;
             BorderTexture.SetData(data);
+        }
+
+        private void StartNewButton_Click(object sender, EventArgs e)
+        {
+            (_game as MinerGame).ChangeState(new GameState(_game, _graphicsDevice, _content, _difficulty));
         }
 
         private void MenuButton_Click(object sender, EventArgs e)
@@ -237,10 +253,6 @@ namespace Mono.States
         {
             return _tileHeight;
         }
-        public int GetTileSpace()
-        {
-            return _tileSpace;
-        }
 
 
 
@@ -263,7 +275,6 @@ namespace Mono.States
                 {
                     tileWidth = PixelSize;
                     tileHeight = PixelSize;
-                    _tileSpace = Space_Border;
                     sizeIsOk = true;
                 }
                 else
@@ -278,8 +289,8 @@ namespace Mono.States
             BorderRectangle = new Rectangle(
                 Space_Left,
                 Space_Header,
-               _mapElements_actual.NbLines * PixelSize + (_mapElements_actual.NbLines - 1) * Space_Border,
-               _mapElements_actual.NbRows * PixelSize + (_mapElements_actual.NbRows - 1) * Space_Border
+               _mapElements_actual.NbLines * PixelSize + (_mapElements_actual.NbLines + 1) * Space_Border ,
+               _mapElements_actual.NbRows * PixelSize + (_mapElements_actual.NbRows + 1) * Space_Border
                );
         }
     }

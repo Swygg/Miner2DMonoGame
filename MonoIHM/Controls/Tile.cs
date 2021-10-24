@@ -33,12 +33,8 @@ namespace Mono.Controls
         public int Height { get; set; } = 30;
         public int Space { get; set; } = 5;*/
 
-        public int StartX { get; set; } = 50;
-        public int StartY { get; set; } = 50;
 
-
-
-        public Tile(GameState gameState, ml.Tile tile, int x, int y) 
+        public Tile(GameState gameState, ml.Tile tile, int x, int y)
         {
             _gameState = gameState;
             ChangeTile(tile);
@@ -47,9 +43,11 @@ namespace Mono.Controls
 
             var Width = _gameState.GetTileWidth();
             var Height = _gameState.GetTileHeight();
-            var Space = _gameState.GetTileSpace();
+            var Space = _gameState.Space_Border;
 
-            Position = new Vector2(StartX + x * Width + (x - 1) * Space, StartY + y * Height + (y - 1) * Space);
+            Position = new Vector2(
+                _gameState.Space_Left + x * Width + (x - 1) * Space + Space * 2,
+                _gameState.Space_Header + y * Height + (y - 1) * Space + Space * 2);
         }
 
         public void ChangeTile(ml.Tile tile)
@@ -128,8 +126,8 @@ namespace Mono.Controls
             spriteBatch.Draw(_texture, Rectangle, Color.White);
             if (_tileMinerLogic.NumberMines != -1 && _tileMinerLogic.NumberMines != 0)
             {
-                var vector = new Vector2((Position.X + _gameState.GetTileWidth() / 2) - _gameState.TilesFont.MeasureString(_tileMinerLogic.NumberMines.ToString()).X/2,
-                                         (Position.Y + _gameState.GetTileHeight() / 2 )- _gameState.TilesFont.MeasureString(_tileMinerLogic.NumberMines.ToString()).Y/2);
+                var vector = new Vector2((Position.X + _gameState.GetTileWidth() / 2) - _gameState.TilesFont.MeasureString(_tileMinerLogic.NumberMines.ToString()).X / 2,
+                                         (Position.Y + _gameState.GetTileHeight() / 2) - _gameState.TilesFont.MeasureString(_tileMinerLogic.NumberMines.ToString()).Y / 2);
 
                 spriteBatch.DrawString(_gameState.TilesFont, _tileMinerLogic.NumberMines.ToString(), vector, Color.Black);
             }

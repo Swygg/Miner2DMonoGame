@@ -31,18 +31,30 @@ namespace Mono.Controls
         {
             get
             {
+                var width = 0;
+                var height = 0;
+                if(string.IsNullOrEmpty(Text))
+                {
+                    width = 50;// _texture.Width;
+                    height = 50; //_texture.Width;
+                }
+                else
+                {
+                    width = (int)_font.MeasureString(Text).X + 50;
+                    height = (int)_font.MeasureString(Text).Y + 10;
+                }
                 if(Centered)
                 return new Rectangle(
                     (int)Position.X - (int)_font.MeasureString(Text).X / 2-25, 
                     (int)Position.Y,
-                    (int)_font.MeasureString(Text).X +50, 
-                    (int)_font.MeasureString(Text).Y + 10);
+                    width,
+                    height);
                 else
                     return new Rectangle(
                     (int)Position.X,
                     (int)Position.Y,
-                    (int)_font.MeasureString(Text).X +50,
-                    (int)_font.MeasureString(Text).Y + 10);
+                    width,
+                    height);
             }
         }
 
